@@ -3,7 +3,7 @@ const path = require("path");
 const { startServer } = require("../server/index");
 
 const PORT = 3847;
-const isDev = process.env.NODE_ENV === "development" || !app.isPackaged;
+const isDev = process.env.NODE_ENV === "development";
 
 let mainWindow;
 
