@@ -1,0 +1,30 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0f;
+  --surface: #18181b;
+  --border: #27272a;
+  --text: #fafafa;
+  --muted: #71717a;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
