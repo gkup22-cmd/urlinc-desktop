@@ -6,12 +6,48 @@ const { eq, desc } = require("drizzle-orm");
 
 const router = Router();
 
-// GET /api/videos — list all videos
-router.get("/", (_req, res) => {
+// GET /api/videos/stats
+router.get("/stats", (_req, res) => {
   try {
     const db = getDb();
+    const rows = db.select().from(videos).all();
+    const total = rows.length;
+    // Group by category field if it exists, otherwise return empty
+    const counts = {};
+    for (const row of rows) {
+      const cat = row.category || null;
+      if (cat) counts[cat] = (counts[cat] || 0) + 1;
+    }
+    const byCategory = Object.entries(counts).map(([category, count]) => ({ category, count }));
+    res.json({ total, byCategory });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Map DB row fields to the shape the renderer expects
+function mapVideo(row) {
+  return {
+    ...row,
+    youtubeUrl: row.url,
+    thumbnailUrl: row.thumbnail,
+    createdAt: (row.createdAt || 0) * 1000,
+    updatedAt: (row.updatedAt || 0) * 1000,
+    tags: (() => { try { return JSON.parse(row.tags || "[]"); } catch { return []; } })(),
+  };
+}
+
+// GET /api/videos — paginated list (cursor-based, limit param)
+router.get("/", (req, res) => {
+  try {
+    const db = getDb();
+    const limit = Math.min(parseInt(req.query.limit) || 200, 500);
+    const cursor = req.query.cursor ? parseInt(req.query.cursor) : null;
     const rows = db.select().from(videos).orderBy(desc(videos.createdAt)).all();
-    res.json(rows);
+    const start = cursor ?? 0;
+    const items = rows.slice(start, start + limit).map(mapVideo);
+    const nextCursor = start + limit < rows.length ? String(start + limit) : null;
+    res.json({ items, nextCursor });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

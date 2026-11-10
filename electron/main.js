@@ -41,7 +41,7 @@ async function createWindow() {
     return { action: "deny" };
   });
 
-  if (isDev) mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

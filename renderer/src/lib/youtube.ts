@@ -1,6 +1,7 @@
 // ── YouTube ──────────────────────────────────────────────────────────────────
 
-export function getYoutubeVideoId(url: string): string | null {
+export function getYoutubeVideoId(url: string | null | undefined): string | null {
+  if (!url) return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : null;
@@ -17,7 +18,8 @@ export function getYoutubeThumbnailUrl(url: string, fallbackUrl?: string | null)
 
 // ── Facebook ─────────────────────────────────────────────────────────────────
 
-export function isFacebookUrl(url: string): boolean {
+export function isFacebookUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
   return /facebook\.com|fb\.watch/i.test(url);
 }
 
@@ -42,7 +44,8 @@ export function getFacebookEmbedUrl(url: string): string | null {
 
 // ── Dailymotion ───────────────────────────────────────────────────────────────
 
-export function getDailymotionVideoId(url: string): string | null {
+export function getDailymotionVideoId(url: string | null | undefined): string | null {
+  if (!url) return null;
   const match = url.match(/(?:dailymotion\.com\/video\/|dai\.ly\/)([a-zA-Z0-9]+)/);
   return match ? match[1] : null;
 }
@@ -59,7 +62,8 @@ export function getDailymotionThumbnailUrl(url: string): string {
 
 // ── Vimeo ─────────────────────────────────────────────────────────────────────
 
-export function getVimeoVideoId(url: string): string | null {
+export function getVimeoVideoId(url: string | null | undefined): string | null {
+  if (!url) return null;
   const match = url.match(/vimeo\.com\/(?:video\/|channels\/[^/]+\/|groups\/[^/]+\/videos\/)?(\d+)/);
   return match ? match[1] : null;
 }
@@ -112,7 +116,8 @@ export type VideoPlatform =
   | "plex"
   | "unknown";
 
-export function detectPlatform(url: string): VideoPlatform {
+export function detectPlatform(url: string | null | undefined): VideoPlatform {
+  if (!url) return "unknown";
   if (getYoutubeVideoId(url)) return "youtube";
   if (isFacebookUrl(url)) return "facebook";
   if (getDailymotionVideoId(url)) return "dailymotion";
