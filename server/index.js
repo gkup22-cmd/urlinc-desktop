@@ -77,7 +77,10 @@ async function startServer(port) {
   app.get("/api/game-invites", (_req, res) => res.json([]));
   app.get("/api/videos/cleanup-summary", (_req, res) => res.json({ count: 0, items: [] }));
   app.get("/api/photos/cleanup-summary", (_req, res) => res.json({ count: 0, items: [] }));
-  app.post("/api/videos/validate-ids", (_req, res) => res.json({ valid: [], invalid: [] }));
+  app.post("/api/videos/validate-ids", (req, res) => {
+    const ids = req.body?.ids ?? [];
+    res.json({ valid: ids, invalid: [] });
+  });
   app.get("/api/notifications", (_req, res) => res.json([]));
 
   app.get("/api/remote/session", (_req, res) => res.json({ sessionId: null }));
