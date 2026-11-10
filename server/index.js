@@ -34,7 +34,7 @@ async function startServer(port) {
   app.get("/api/health", (_req, res) => res.json({ ok: true, mode: "local" }));
 
   // Serve built React app in production
-  const rendererDist = path.join(__dirname, "../renderer/dist");
+  const rendererDist = path.join(__dirname, "../renderer/dist");  // vite builds to renderer/dist
   app.use(express.static(rendererDist));
   app.get("*", (_req, res) => {
     res.sendFile(path.join(rendererDist, "index.html"));
